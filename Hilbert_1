@@ -1,0 +1,12 @@
+function [x,y] = hilbert(n)
+%HILBERT Hilbert curve.
+
+
+if n<=0
+  x=0;
+  y=0;
+else
+  [xo,yo]=hilbert(n-1);
+  x=.5*[-.5+yo -.5+xo .5+xo  .5-yo];
+  y=.5*[-.5+xo  .5+yo .5+yo -.5-xo];
+end
