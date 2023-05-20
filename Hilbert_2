@@ -1,0 +1,79 @@
+clear all;close all;clc;
+
+h=256;
+w=256;
+n=5;   
+imgn=zeros(h,w);
+[x,y]=hilbert(n);       
+x=floor((x+0.5)*w)+1;
+y=floor((y+0.5)*h)+1;
+l=length(x);
+for i=1:l-1
+    imgn=drawline(imgn,x(i),y(i),x(i+1),y(i+1));  
+end
+
+imshow(imgn)
+%可以四个方块四个方块检查
+% [1,1;1,0]  或者 [1,1;0,1]  或者 [1,0;1,1] 或者 [0,1;1,1]
+a = [1,1;1,0];               %左上角型         
+b = [1,1;0,1];               %右上角型
+c = [1,0;1,1];               %左下角型
+d = [0,1;1,1];               %右下角型
+num_1 = find(imgn==1);
+num_1 = length(num_1);
+add_1=0;
+add_2=0;
+add_3=0;
+add_4=0;
+for g = 1:255
+    for k = 1:255
+    e(1,1) = imgn(g,k);
+    e(1,2) = imgn(g,k+1);
+    e(2,1) = imgn(g+1,k); 
+    e(2,2) = imgn(g+1,k+1);
+    if e(1,1)==a(1,1)&&e(1,2)==a(1,2)&&e(2,1)==a(2,1)&&e(2,2)==a(2,2)
+         add_1=add_1+1;
+    end
+    if e(1,1)==b(1,1)&&e(1,2)==b(1,2)&&e(2,1)==b(2,1)&&e(2,2)==b(2,2)
+        add_2=add_2+1;
+    end
+    if e(1,1)==c(1,1)&&e(1,2)==c(1,2)&&e(2,1)==c(2,1)&&e(2,2)==c(2,2)
+        add_3=add_3+1;
+    end
+    if e(1,1)==d(1,1)&&e(1,2)==d(1,2)&&e(2,1)==d(2,1)&&e(2,2)==d(2,2)
+       add_4=add_4+1;
+    end
+    end
+end
+
+f = [1,1;0,0];
+n = [1,0;1,0];
+add_x =0;
+add_y =0;
+for g = 1:255
+% add_y =0;
+    for k = 1:255
+    e(1,1) = imgn(g,k);
+    e(1,2) = imgn(g,k+1);
+    e(2,1) = imgn(g+1,k); 
+    e(2,2) = imgn(g+1,k+1);
+    if e(1,1)==f(1,1)&&e(1,2)==f(1,2)&&e(2,1)==f(2,1)&&e(2,2)==f(2,2)
+         add_x=add_x+1;
+    end
+    if e(1,1)==n(1,1)&&e(1,2)==n(1,2)&&e(2,1)==n(2,1)&&e(2,2)==n(2,2)
+        add_y=add_y+1;
+    end
+    end
+end
+% add_x = add_x;
+% add_y = add_y;
+%中间隔得是7个0
+ nnn=(add_y+add_1+add_3)/(num_1-1);                       %计算Y方向变化的概率
+ nnn_n=(add_x+add_1+add_2)/(num_1-1);                     %计算X方向变化的概率
+ H=-(nnn*(log(nnn)/log(2))+nnn_n*(log(nnn_n)/log(2))); %计算X和Y方向熵值
+ 
+ x_y = (add_4+add_2)/num_1;
+ x_x = add_x/num_1;
+ y_y = add_y/num_1;
+ y_x = (add_1+add_3)/num_1;
+ H4=-(x_y*(log(x_y)/log(4))+x_x *(log(x_x)/log(4))+y_y*(log(y_y)/log(4))+y_x*(log(y_x)/log(4))); 
